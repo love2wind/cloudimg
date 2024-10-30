@@ -13,6 +13,8 @@
       height: 100vh;
       margin: 0;
       background-color: #f0f0f0;
+      position: relative; /* 确保页面内容在视频背景之上 */
+      z-index: 1; /* 确保页面内容在视频背景之上 */
     }
     .container {
       text-align: center;
@@ -32,6 +34,27 @@
       font-size: 18px;
       word-wrap: break-word;
     }
+    #videobg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* 确保视频背景在页面内容之下 */
+    }
+    .real_mask {
+      background-color: rgba(0,0,0,0.35);
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      z-index: -777;
+    }
+    #banner_video_insert video {
+      position: fixed;
+      z-index: -888;
+      width: 100%;
+      height: auto;
+    }
   </style>
 </head>
 <body>
@@ -41,7 +64,37 @@
     <div id="uuid"></div>
   </div>
 
+  <!-- 视频背景 -->
+  <div id="videobg">
+    <div class="real_mask" style="
+      background-color: rgba(0,0,0,0.35);
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      z-index: -777;
+    "></div>
+    <div id="banner_video_insert">
+      <video id="video_item" style="position: fixed; z-index: -888;" muted="muted" autoplay="autoplay" loop="loop" width="100%" height="auto"></video>
+    </div>
+    <div id="vvd_banner_img"></div>
+  </div>
+
   <script>
+    // 视频地址列表
+    const videoUrls = [
+      "https://img-baofun.zhhainiao.com/pcwallpaper_ugc/preview/e90c0f2ef91f18a59f8d6f752b30afbb_preview.mp4",
+      "https://img-baofun.zhhainiao.com/pcwallpaper_ugc/preview/4becf24d8cc539cd8f7a0118998c0d81_preview.mp4",
+      "https://img-baofun.zhhainiao.com/pcwallpaper_ugc/preview/c1c5da61195ebdbb1e827b95be70f9ee_preview.mp4",
+      "https://img-baofun.zhhainiao.com/pcwallpaper_ugc/preview/a155a17eb91e464e4ac43fb39daa2123_preview.mp4",
+      "https://img-baofun.zhhainiao.com/pcwallpaper_ugc/preview/4ec538cfe87e220f8e058c04c76a8ae5_preview.mp4"
+    ];
+
+    // 随机选择一个视频地址
+    const randomVideoUrl = videoUrls[Math.floor(Math.random() * videoUrls.length)];
+
+    // 设置视频背景
+    document.getElementById('video_item').src = randomVideoUrl;
+
     async function generateUUID() {
       // 发送请求到 Workers 获取 UUID
       const response = await fetch('/uuid');
